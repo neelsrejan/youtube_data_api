@@ -8,6 +8,7 @@ def main():
     YT.get_channel_metadata()
     YT.get_activities(2*YT.num_vids)
     YT.get_captions()
+    YT.get_channels()
 
 if __name__ == "__main__":
     main()

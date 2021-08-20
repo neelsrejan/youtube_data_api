@@ -1,9 +1,10 @@
-import requests
 import json
+import requests
 from ytd_activities import Activities
 from ytd_captions import Captions
+from ytd_channels import Channels
 
-class YT_CHANNEL(Activities, Captions):
+class YT_CHANNEL(Activities, Captions, Channels):
 
     def __init__(self, API_KEY, channel_id):
         self.API_KEY = API_KEY
@@ -26,7 +27,7 @@ class YT_CHANNEL(Activities, Captions):
 
     def get_channel_name(self):
         url = f"https://www.googleapis.com/youtube/v3/activities?part=snippet&maxResults=1&channelId={self.channel_id}&key={self.API_KEY}"
-        self.channel_name = json.loads(requests.get(url).text)["items"][0]["snippet"]["channelTitle"]
+        self.channel_name = json.loads(requests.get(url).text)["items"][0]["snippet"]["channelTitle"].replace(" ", "_")
         return 
 
     def get_vid_ids(self, num_vids):
