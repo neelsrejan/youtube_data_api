@@ -6,7 +6,7 @@ def main():
     channel_id = input("Welcome to the Youtube Data API page \nWhat is the ID of the channel you with to get information about? ")
     YT = YT_CHANNEL(API_KEY, channel_id)
     YT.get_channel_metadata()
-    YT.get_activities(YT.num_vids)
+    YT.get_activities(2*YT.num_vids)
 
 if __name__ == "__main__":
     main()

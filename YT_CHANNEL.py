@@ -19,10 +19,11 @@ class YT_CHANNEL(Activities):
 
     def get_channel_name(self):
         url = f"https://www.googleapis.com/youtube/v3/activities?part=snippet&maxResults=1&channelId={self.channel_id}&key={self.API_KEY}"
-        self.channel_name = json.loads(requests.get(url).text)["items"][0]["snippet"]["channelTitle"].replace(" ", "_")
+        self.channel_name = json.loads(requests.get(url).text)["items"][0]["snippet"]["channelTitle"]
         return
 
     def get_num_vids(self):
         url = f"https://WWW.googleapis.com/youtube/v3/channels?part=statistics&id={self.channel_id}&key={self.API_KEY}"
-        self.num_vids = json.loads(requests.get(url).text)["items"][0]["statistics"]["videoCount"]
+        self.num_vids = int(json.loads(requests.get(url).text)["items"][0]["statistics"]["videoCount"])
         return 
+
