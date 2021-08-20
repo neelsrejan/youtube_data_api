@@ -1,17 +1,12 @@
 from os import environ
-from ytd_activities import Activities
-from ytd_captions import Captions
-
+from YT_CHANNEL import YT_CHANNEL
 
 def main():
     API_KEY = environ["YOUTUBE_DATA_API_KEY"]
-    channel_id = input("Welcome to the Youtube Data API page \nWhat is the ID of the channel you wish to get information about? ")
-    YT = Activities(API_KEY, channel_id)
-    YT.get_total_activities()
-    print(f"The total activity of the channel is {YT.tot_activity}")
-    numResults = YT.ask_for_num_activities()
-    YT.ask_for_which_activity(numResults)
-    
+    channel_id = input("Welcome to the Youtube Data API page \nWhat is the ID of the channel you with to get information about? ")
+    YT = YT_CHANNEL(API_KEY, channel_id)
+    YT.get_channel_metadata()
+    YT.get_activities(YT.num_vids)
 
 if __name__ == "__main__":
     main()
