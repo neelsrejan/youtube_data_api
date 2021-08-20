@@ -7,6 +7,7 @@ def main():
     YT = YT_CHANNEL(API_KEY, channel_id)
     YT.get_channel_metadata()
     YT.get_activities(2*YT.num_vids)
+    YT.get_captions()
 
 if __name__ == "__main__":
     main()
