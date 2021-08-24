@@ -3,8 +3,10 @@ import requests
 from ytd_activities import Activities
 from ytd_captions import Captions
 from ytd_channels import Channels
+from ytd_channel_sections import Channel_Sections
+from YT_COMMENTS import YT_COMMENTS
 
-class YT_CHANNEL(Activities, Captions, Channels):
+class YT_CHANNEL(Activities, Captions, Channels, Channel_Sections, YT_COMMENTS):
 
     def __init__(self, API_KEY, channel_id):
         self.API_KEY = API_KEY
@@ -14,6 +16,9 @@ class YT_CHANNEL(Activities, Captions, Channels):
         self.num_vids = None
         self.vid_ids = None
         self.playlist_ids = None
+
+    def make_Comment(self, API_KEY, vid_id):
+        return YT_COMMENTS(API_KEY, vid_id)
 
     def get_channel_metadata(self):
         self.get_num_vids()
