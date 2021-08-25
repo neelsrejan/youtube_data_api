@@ -5,8 +5,12 @@ from ytd_captions import Captions
 from ytd_channels import Channels
 from ytd_channel_sections import Channel_Sections
 from YT_COMMENTS import YT_COMMENTS
+from ytd_playlists import Playlists
+from ytd_playlist_items import Playlist_Items
+from ytd_search import Search
+from ytd_video import Video
 
-class YT_CHANNEL(Activities, Captions, Channels, Channel_Sections, YT_COMMENTS):
+class YT_CHANNEL(Activities, Captions, Channels, Channel_Sections, YT_COMMENTS, Playlists, Playlist_Items, Search, Video):
 
     def __init__(self, API_KEY, channel_id):
         self.API_KEY = API_KEY
@@ -23,7 +27,8 @@ class YT_CHANNEL(Activities, Captions, Channels, Channel_Sections, YT_COMMENTS):
     def get_channel_metadata(self):
         self.get_num_vids()
         self.get_channel_name()
-        self.get_vid_ids(2*self.num_vids)
+        self.get_vid_ids(2 * self.num_vids)
+        self.get_playlist_ids(2 * self.num_vids)
 
     def get_num_vids(self):
         url = f"https://WWW.googleapis.com/youtube/v3/channels?part=statistics&id={self.channel_id}&key={self.API_KEY}"
@@ -39,4 +44,9 @@ class YT_CHANNEL(Activities, Captions, Channels, Channel_Sections, YT_COMMENTS):
         url = f"https://www.googleapis.com/youtube/v3/activities?part=contentDetails&maxResults={num_vids}&channelId={self.channel_id}&key={self.API_KEY}"
         results = json.loads(requests.get(url).text)
         self.vid_ids = [item["contentDetails"]["upload"]["videoId"] for item in results["items"] if len(item["contentDetails"]) != 0]
-        return 
+        return
+
+    def get_playlist_ids(self, num_vids):
+        url = f"https://www.googleapis.com/youtube/v3/playlists?part=id&channelId={self.channel_id}&maxResults={num_vids}&key={self.API_KEY}"
+        results = json.loads(requests.get(url).text)
+        self.playlist_ids = [playlist["id"] for playlist in results["items"] if len(results["items"]) != 0]
