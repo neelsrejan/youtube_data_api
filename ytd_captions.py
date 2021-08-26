@@ -1,5 +1,7 @@
+import os
 import json
 import requests
+from datetime import date
 
 class Captions:
 
@@ -17,6 +19,6 @@ class Captions:
         return
 
     def write_part_captions(self, results, part, vid_id):
-        with open(f"{self.channel_name}_{part}_{vid_id}_captions.json", "w") as f:
+        with open(os.path.join(os.getcwd(), f"{self.channel_name}_data", f"{date.today()}", "captions", f"{self.channel_name}_{part}_{vid_id}_captions.json"), "w") as f:
             json.dump(results, f, indent = 4)
 

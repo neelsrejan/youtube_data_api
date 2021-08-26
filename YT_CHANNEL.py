@@ -21,8 +21,8 @@ class YT_CHANNEL(Activities, Captions, Channels, Channel_Sections, YT_COMMENTS, 
         self.vid_ids = None
         self.playlist_ids = None
 
-    def make_Comment(self, API_KEY, vid_id):
-        return YT_COMMENTS(API_KEY, vid_id)
+    def make_Comment(self, API_KEY, vid_id, channel_name):
+        return YT_COMMENTS(API_KEY, vid_id, channel_name)
 
     def get_channel_metadata(self):
         self.get_num_vids()
@@ -50,3 +50,4 @@ class YT_CHANNEL(Activities, Captions, Channels, Channel_Sections, YT_COMMENTS, 
         url = f"https://www.googleapis.com/youtube/v3/playlists?part=id&channelId={self.channel_id}&maxResults={num_vids}&key={self.API_KEY}"
         results = json.loads(requests.get(url).text)
         self.playlist_ids = [playlist["id"] for playlist in results["items"] if len(results["items"]) != 0]
+        return

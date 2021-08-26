@@ -1,5 +1,7 @@
+import os
 import json
 import requests
+from datetime import date
 
 class Search():
 
@@ -13,5 +15,5 @@ class Search():
         self.write_snippet_related_vids(vid_id, results)
 
     def write_snippet_related_vids(self, vid_id, results):
-        with open(f"{vid_id}_related_videos.json", "w") as f:
+        with open(os.path.join(os.getcwd(), f"{self.channel_name}_data", f"{date.today()}", "search", f"{self.channel_name}_{vid_id}_related_videos.json"), "w") as f:
             json.dump(results, f, indent = 4)

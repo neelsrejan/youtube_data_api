@@ -1,5 +1,7 @@
+import os
 import json
 import requests
+from datetime import date
 
 class Activities():
 
@@ -15,5 +17,5 @@ class Activities():
         return
 
     def write_part_activities(self, results, part, num_vids):
-        with open(f"{self.channel_name}_{part}_{num_vids}_activities.json", "w") as f:
+        with open(os.path.join(os.getcwd(), f"{self.channel_name}_data", f"{date.today()}", "activity", f"{self.channel_name}_{part}_activities.json"), "w") as f:
             json.dump(results, f, indent = 4)
