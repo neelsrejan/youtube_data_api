@@ -33,5 +33,8 @@ def main():
     YT.get_related_vids()
     YT.get_video()
 
+    # Clean data into excel/csv
+    #YT.clean_data()
+
 if __name__ == "__main__":
     main()
