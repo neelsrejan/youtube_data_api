@@ -6,7 +6,11 @@ def main():
     #clean_activity()
     #clean_channel_sections()
     #clean_channels()
-    clean_comments()
+    #clean_comments()
+    #clean_playlist_items()
+    #clean_playlists()
+    #clean_search()
+    clean_videos()
 
 def clean_activity():
     content_detail_clean_data = []
@@ -97,43 +101,137 @@ def clean_channels():
     channels_df.to_excel("clean_channels.xlsx", index=False)
 
 def clean_comments():
-    clean_comments_data = []
     
-    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-01", "comments", "Concept_New_Era_xzn1JjU-0G0_comments.json"), "r") as f:
+    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-03", "comments", "Concept_New_Era_xzn1JjU-0G0_comments.json"), "r") as f:
         data = json.load(f)
         if len(data["all_comments"]) == 0:
-            clean_comments_data.append([data["videoId"], "NULL", "NULL"])
+            clean_comments_df = pd.DataFrame({"Video_Id": data["videoId"], "Main_Comment": "Null", "Replies": "Null"})
+            
+            clean_comments_df.to_csv("clean_comments.csv", index=False, na_rep="Null")
+            clean_comments_df.to_excel("clean_comments.xlsx", index=False, na_rep="Null")                                    
         else:
             max_replies = 0
             for comment_thread in data["all_comments"]:
                 if len(comment_thread["replies"]) > max_replies:
                     max_replies = len(comment_thread["replies"])
 
-            for comment_thread in data["all_comments"]:
-                main_comment = comment_thread["items"][0]["snippet"]
-                if len(comment_thread["replies"]) == 0:
-                        clean_comments_data.append([data["videoId"], main_comment["authorDisplayName"], main_comment["authorChannelUrl"], main_comment["textOriginal"], main_comment["likeCount"], main_comment["publishedAt"]])
+            clean_comments_df = pd.DataFrame(columns=["Video_Id"])
+
+            for i in range(max_replies + 1):
+                clean_comments_df[f"Author_Name_{i}"] = None
+                clean_comments_df[f"Author_YT_Channel_Url_{i}"] = None
+                clean_comments_df[f"Comment_{i}"] = None
+                clean_comments_df[f"Likes_{i}"] = None
+                clean_comments_df[f"Date_Published_{i}"] = None
+
+            for comment_thread_num in range(len(data["all_comments"])):
+                main_comment = data["all_comments"][comment_thread_num]["items"][0]["snippet"]
+                replies = data["all_comments"][comment_thread_num]["replies"]
+                to_append = [data["videoId"], main_comment["authorDisplayName"], main_comment["authorChannelUrl"], main_comment["textOriginal"], main_comment["likeCount"], main_comment["publishedAt"]]
+
+                if len(replies) == 0:
+                    for i in range(5*max_replies):
+                        to_append.append("Null")
                 else:
-                    to_append = [data["videoId"], main_comment["authorDisplayName"], main_comment["authorChannelUrl"], main_comment["textOriginal"], main_comment["likeCount"], main_comment["publishedAt"]]
-                    replies = comment_thread["replies"]
-                    
-                    if len(comment_thread["replies"]) != max_replies:
-                        num_null_loops = max_replies - len(comment_thread["replies"])
-                        for i in range(len(comment_thread["replies"])):
-                            to_append.append(replies[i]["items"][0]["snippet"]["authorDisplayName"])
-                            to_append.append(replies[i]["items"][0]["snippet"]["authorChannelUrl"])
-                            to_append.append(replies[i]["items"][0]["snippet"]["textOriginal"])
-                            to_append.append(replies[i]["items"][0]["snippet"]["likeCount"])
-                            to_append.append(replies[i]["items"][0]["snippet"]["publishedAt"])
-                        for i in range(5*num_null_loops):
-                            to_append.append("Null")
-                    else:
-                        for i in range(len(comment_thread["replies"])):
-                            to_append.append(replies[i]["items"][0]["snippet"]["authorDisplayName"])
-                            to_append.append(replies[i]["items"][0]["snippet"]["authorChannelUrl"])
-                            to_append.append(replies[i]["items"][0]["snippet"]["textOriginal"])
-                            to_append.append(replies[i]["items"][0]["snippet"]["likeCount"])
-                            to_append.append(replies[i]["items"][0]["snippet"]["publishedAt"])
-                         
+                    for i in range(len(replies)):
+                        to_append.append(replies[i]["items"][0]["snippet"]["authorDisplayName"])
+                        to_append.append(replies[i]["items"][0]["snippet"]["authorChannelUrl"])
+                        to_append.append(replies[i]["items"][0]["snippet"]["textOriginal"])
+                        to_append.append(replies[i]["items"][0]["snippet"]["likeCount"])
+                        to_append.append(replies[i]["items"][0]["snippet"]["publishedAt"])
+                    for i in range(5*(max_replies-len(replies))):
+                        to_append.append("Null")
+                clean_comments_df.loc[len(clean_comments_df)] = to_append
+
+            clean_comments_df.to_csv("clean_comments.csv", index=False, na_rep="Null")
+            clean_comments_df.to_excel("clean_comments.xlsx", index=False, na_rep="Null")
+
+def clean_playlist_items():
+    clean_snippet_data = []
+
+    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-03", "playlist_items", "Concept_New_Era_snippet_PL4OICRNRxUANcuKsOc3P6RbbZ6nVnhrgS_playlist_items.json"), "r") as f:
+        data = json.load(f)
+        for item in data["items"]:
+            clean_snippet_data.append([item["snippet"]["channelId"], item["snippet"]["channelTitle"], item["snippet"]["playlistId"], item["snippet"]["position"], item["snippet"]["resourceId"]["videoId"], item["snippet"]["publishedAt"], item["snippet"]["title"], item["snippet"]["description"], item["snippet"]["thumbnails"]["default"]["url"]])
+
+    clean_snippet_df = pd.DataFrame(data=clean_snippet_data, columns=["Channel_Id", "Channel_Name", "Playlist_Id", "Playlist_position", "Video_Id", "Video_Published_At", "Video_Title", "Video_Description", "Default_Thumbnail_Url"])
+
+    clean_snippet_df.to_csv("clean_playlist_items.csv", index=False)
+    clean_snippet_df.to_excel("clean_playlist_items.xlsx", index=False)
+
+def clean_playlists():
+    clean_content_details_data = []
+    clean_player_data = []
+    clean_snippet_data = []
+
+    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-03", "playlists", "Concept_New_Era_contentDetails_playlists.json"), "r") as f:
+        data = json.load(f)
+        for item in data["items"]:
+            clean_content_details_data.append([item["id"], item["contentDetails"]["itemCount"]])
+
+    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-03", "playlists", "Concept_New_Era_player_playlists.json"), "r") as f:
+        data = json.load(f)
+        for item in data["items"]:
+            url = item["player"]["embedHtml"].split()[3][5:-1]
+            clean_player_data.append([item["id"], item["player"]["embedHtml"], url])
+    
+    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-03", "playlists", "Concept_New_Era_snippet_playlists.json"), "r") as f:
+        data = json.load(f)
+        for item in data["items"]:
+            clean_snippet_data.append([item["id"], item["snippet"]["channelId"], item["snippet"]["channelTitle"], item["snippet"]["publishedAt"], item["snippet"]["title"], item["snippet"]["description"], item["snippet"]["thumbnails"]["default"]["url"]])
+
+    clean_content_details_df = pd.DataFrame(data=clean_content_details_data, columns=["Playlist_Id", "Videos_In_Playlist"])
+    clean_player_df = pd.DataFrame(data=clean_player_data, columns=["Playlist_Id", "Embed_Html", "Playlist_Url"])
+    clean_snippet_df = pd.DataFrame(data=clean_snippet_data, columns=["Playlist_Id", "Channel_Id", "Channel_Name", "Playlist_Published_At", "Playlist_Title", "Playlist_Description", "Playlist_Thumbnail_Default_Url"])
+
+    temp_df = clean_content_details_df.merge(clean_player_df, on=["Playlist_Id"], how="inner")
+    playlists_df = temp_df.merge(clean_snippet_df, on=["Playlist_Id"], how="inner")
+
+    playlists_df.to_csv("clean_playlists.csv", index=False)
+    playlists_df.to_excel("clean_playlists.xlsx", index=False)
+
+def clean_search():
+    clean_search_data = []
+
+    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-03", "search", "Concept_New_Era_xzn1JjU-0G0_related_videos.json"), "r") as f:
+        data = json.load(f)
+        for item in data["items"]:
+            clean_search_data.append([item["id"]["videoId"], item["snippet"]["publishedAt"], item["snippet"]["channelId"], item["snippet"]["channelTitle"], item["snippet"]["title"], item["snippet"]["description"]])
+
+    clean_search_df = pd.DataFrame(data=clean_search_data, columns=["Video_Id", "Video_Published_At", "Channel_Id", "Channel_Name", "Video_Title", "Video_Description"])
+
+    clean_search_df.to_csv("clean_serarch.csv", index=False)
+    clean_search_df.to_excel("clean_search.xlsx", index=False)
+
+def clean_videos():
+    clean_content_details_data = []
+    clean_snippet_data = []
+    clean_statistics_data = []
+
+    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-03", "videos", "Concept_New_Era_contentDetails_xzn1JjU-0G0_video.json"), "r") as f:
+        data = json.load(f)
+        clean_content_details_data.append([data["items"][0]["id"], data["items"][0]["contentDetails"]["duration"]])
+        clean_content_details_df = pd.DataFrame(data=clean_content_details_data, columns=["Video_Id", "Video_Duration"])
+   
+    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-03", "videos", "Concept_New_Era_snippet_xzn1JjU-0G0_video.json"), "r") as f:
+        data = json.load(f)
+        clean_snippet_data = [data["items"][0]["id"], data["items"][0]["snippet"]["publishedAt"], data["items"][0]["snippet"]["channelId"], data["items"][0]["snippet"]["channelTitle"], data["items"][0]["snippet"]["title"], data["items"][0]["snippet"]["description"], data["items"][0]["snippet"]["thumbnails"]["default"]["url"]]
+        clean_snippet_df = pd.DataFrame(columns=["Video_Id", "Video_Published_At", "Channel_Id", "Channel_Name", "Video_Title", "Video_Description", "Thumbnails_Default_Url"])
+        for i in range(len(data["items"][0]["snippet"]["tags"])):
+            clean_snippet_data.append(data["items"][0]["snippet"]["tags"][i])
+            clean_snippet_df[f"tag_{i+1}"] = "Null"
+        clean_snippet_df.loc[len(clean_snippet_df)] = clean_snippet_data
+    
+    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-03", "videos", "Concept_New_Era_statistics_xzn1JjU-0G0_video.json"), "r") as f:
+        data = json.load(f)
+        clean_statistics_data.append([data["items"][0]["id"], data["items"][0]["statistics"]["viewCount"], data["items"][0]["statistics"]["likeCount"], data["items"][0]["statistics"]["dislikeCount"], data["items"][0]["statistics"]["favoriteCount"], data["items"][0]["statistics"]["commentCount"]])
+        clean_statistics_df = pd.DataFrame(data=clean_statistics_data, columns=["Video_Id", "View_Count", "Like_Count", "Dislike_Count", "Favorite_Count", "Comment_Count"])
+    
+    temp_df = clean_content_details_df.merge(clean_snippet_df, on=["Video_Id"], how="inner")
+    video_df = temp_df.merge(clean_statistics_df, on=["Video_Id"], how="inner")
+
+    video_df.to_csv("clean_video.csv", index=False)
+    video_df.to_excel("clean_video.xlsx", index=False)
+
 if __name__ == "__main__":
     main()

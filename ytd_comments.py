@@ -13,7 +13,9 @@ class Comments():
             if len(thread_ids) != 0:
                 for thread_id in thread_ids:
                     results["replies"].append(self.get_part_comment(thread_id))
-                    comment_dictionary["all_comments"].append(results)
+                comment_dictionary["all_comments"].append(results)
+            else:
+                comment_dictionary["all_comments"].append(results)
         self.write_part_comment(comment_dictionary)
 
     def get_part_comment(self, comment_id):

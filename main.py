@@ -30,7 +30,7 @@ def main():
         vid.get_vid_comments()
     YT.get_playlists()
     YT.get_playlist_items(2 * YT.num_vids)
-    YT.get_related_vids()
+    #YT.get_related_vids()
     YT.get_video()
 
     # Clean data into excel/csv
