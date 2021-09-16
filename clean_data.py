@@ -3,13 +3,13 @@ import json
 import pandas as pd
 
 def main():
-    #clean_activity()
-    #clean_channel_sections()
-    #clean_channels()
-    #clean_comments()
-    #clean_playlist_items()
-    #clean_playlists()
-    #clean_search()
+    clean_activity()
+    clean_channel_sections()
+    clean_channels()
+    clean_comments()
+    clean_playlist_items()
+    clean_playlists()
+    clean_search()
     clean_videos()
 
 def clean_activity():

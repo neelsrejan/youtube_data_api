@@ -14,24 +14,25 @@ def main():
     YT.get_channel_metadata()
 
     # Create directories for saving data into when running functions
+    '''
     if not os.path.exists(os.path.join(os.getcwd(), f"{YT.channel_name}_data", f"{date.today()}")):
-        data_categories = ["activity", "captions", "channels", "channel_sections", "comments", "playlists", "playlist_items", "search", "videos"]
+        data_categories = ["activity", "channels", "channel_sections", "comments", "playlists", "playlist_items", "search", "videos"]
         for data_category in data_categories:
             os.makedirs(os.path.join(os.getcwd(), f"{YT.channel_name}_data", f"{date.today()}", f"{data_category}"))
+    '''
 
     # Get all data
-    YT.get_activities(2 * YT.num_vids)
-    YT.get_captions()
-    YT.get_channels()
-    YT.get_channel_sections()
-    for vid_id in YT.vid_ids:
-        vid = YT.make_Comment(API_KEY, vid_id, YT.channel_name)
-        vid.comment_ids = vid.get_vid_comment_ids()
-        vid.get_vid_comments()
-    YT.get_playlists()
-    YT.get_playlist_items(2 * YT.num_vids)
+    #YT.get_activities(2 * YT.num_vids)
+    #YT.get_channels()
+    #YT.get_channel_sections()
+    #for vid_id in YT.vid_ids:
+        #vid = YT.make_Comment(API_KEY, vid_id, YT.channel_name)
+        #vid.comment_ids = vid.get_vid_comment_ids()
+        #vid.get_vid_comments()
+    #YT.get_playlists()
+    #YT.get_playlist_items(2 * YT.num_vids)
     #YT.get_related_vids()
-    YT.get_video()
+    #YT.get_video()
 
     # Clean data into excel/csv
     #YT.clean_data()
