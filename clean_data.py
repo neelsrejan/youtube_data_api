@@ -200,7 +200,7 @@ def clean_search():
 
     clean_search_df = pd.DataFrame(data=clean_search_data, columns=["Video_Id", "Video_Published_At", "Channel_Id", "Channel_Name", "Video_Title", "Video_Description"])
 
-    clean_search_df.to_csv("clean_serarch.csv", index=False)
+    clean_search_df.to_csv("clean_search.csv", index=False)
     clean_search_df.to_excel("clean_search.xlsx", index=False)
 
 def clean_videos():
