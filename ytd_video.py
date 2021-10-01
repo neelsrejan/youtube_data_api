@@ -5,17 +5,23 @@ from datetime import date
 
 class Video():
 
-    def get_video(self):
-        parts = ["contentDetails", "fileDetails", "id", "liveStreamingDetails", "localizations", "player", "processingDetails", "recordingDetails", "snippet", "statistics", "status", "suggestions", "topicDetails"]
+    def get_video(self, vid_id):
+        parts = ["contentDetails", "snippet", "statistics"]
         for part in parts:
-            for vid_id in self.vid_ids:
-                self.get_part_video(part, vid_id)
+            self.get_part_video(part, vid_id)
+
+    def get_num_comments(self, vid_id):
+        self.API_COST += 1
+        url = f"https://www.googleapis.com/youtube/v3/videos?part=statistics&id={vid_id}&key={self.API_KEY}"
+        response = json.loads(requests.get(url).text)
+        return response["items"][0]["statistics"]["commentCount"]
 
     def get_part_video(self, part, vid_id):
+        self.API_COST += 1
         url = f"https://www.googleapis.com/youtube/v3/videos?part={part}&id={vid_id}&key={self.API_KEY}"
-        results = json.loads(requests.get(url).text)
-        self.write_part_video(part, vid_id, results)
+        response = json.loads(requests.get(url).text)
+        self.write_part_video(part, vid_id, response)
 
-    def write_part_video(self, part, vid_id, results):
+    def write_part_video(self, part, vid_id, response):
         with open(os.path.join(os.getcwd(), f"{self.channel_name}_data", f"{date.today()}", "videos", f"{self.channel_name}_{part}_{vid_id}_video.json"), "w") as f:
-            json.dump(results, f, indent = 4)
+            json.dump(response, f, indent = 4)

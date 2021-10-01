@@ -19,6 +19,7 @@ class Comments():
         self.write_part_comment(comment_dictionary)
 
     def get_part_comment(self, comment_id):
+        self.COMMENT_API_COST += 1
         url = f"https://www.googleapis.com/youtube/v3/comments?part=snippet&id={comment_id}&key={self.API_KEY}"
         return json.loads(requests.get(url).text)
 

@@ -7,6 +7,7 @@ class YT_COMMENTS(Comment_Threads, Comments):
         self.API_KEY = API_KEY
         self.vid_id = vid_id
         self.channel_name = channel_name
+        self.COMMENT_API_COST = 0
         super()
         self.comment_ids = None
         self.reply_ids = None

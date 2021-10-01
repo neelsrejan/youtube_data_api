@@ -5,17 +5,30 @@ from datetime import date
 
 class Activities():
 
-    def get_activities(self, num_vids):
-        parts = ["contentDetails", "id", "snippet"]
+    def get_activities(self):
+        parts = ["contentDetails", "snippet"]
         for part in parts:
-            self.get_part_activities(part, num_vids)
+            self.get_part_activities(part)
 
-    def get_part_activities(self, part, num_vids):
-        url = f"https://www.googleapis.com/youtube/v3/activities?part={part}&maxResults={num_vids}&channelId={self.channel_id}&key={self.API_KEY}"
-        results = json.loads(requests.get(url).text)
-        self.write_part_activities(results, part, num_vids)
-        return
+    def get_part_activities(self, part):
+        self.API_COST += 1
+        url = f"https://www.googleapis.com/youtube/v3/activities?part={part}&maxResults=256&channelId={self.channel_id}&key={self.API_KEY}"
+        response = json.loads(requests.get(url).text)
+        to_write = response
 
-    def write_part_activities(self, results, part, num_vids):
+        while 1:
+            try:
+                next_page_token = response["nextPageToken"]
+                self.API_COST += 1
+                url = f"https://www.googleapis.com/youtube/v3/activities?part={part}&maxResults=256&channelId={self.channel_id}&key={self.API_KEY}"
+                response = json.loads(requests.get(url).text)
+                for item in response["items"]:
+                    to_write["items"].append(item)
+            except KeyError:
+                break
+        self.write_part_activities(to_write, part)
+
+
+    def write_part_activities(self, to_write, part):
         with open(os.path.join(os.getcwd(), f"{self.channel_name}_data", f"{date.today()}", "activity", f"{self.channel_name}_{part}_activities.json"), "w") as f:
-            json.dump(results, f, indent = 4)
+            json.dump(to_write, f, indent = 4)

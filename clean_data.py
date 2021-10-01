@@ -16,13 +16,13 @@ def clean_activity():
     content_detail_clean_data = []
     snippet_clean_data = []
 
-    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-08-26", "activity", "Concept_New_Era_contentDetails_activities.json"), "r") as f:
+    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-30", "activity", "Concept_New_Era_contentDetails_activities.json"), "r") as f:
         data = json.load(f)
         for item in data["items"]:
             if item["contentDetails"] != {}:
                 content_detail_clean_data.append([item["id"], item["contentDetails"]["upload"]["videoId"]])
 
-    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-08-26", "activity", "Concept_New_Era_snippet_activities.json"), "r") as f:
+    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-30", "activity", "Concept_New_Era_snippet_activities.json"), "r") as f:
         data = json.load(f)
         for item in data["items"]:
             snippet_clean_data.append([item["id"], item["snippet"]["publishedAt"], item["snippet"]["channelId"], item["snippet"]["title"], item["snippet"]["description"], item["snippet"]["thumbnails"]["default"]["url"], item["snippet"]["channelTitle"], item["snippet"]["type"]])
@@ -39,7 +39,7 @@ def clean_channel_sections():
     content_details_clean_data = []
     snippet_clean_data = []
 
-    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-08-26", "channel_sections", "Concept_New_Era_contentDetails_channel_sections.json"), "r") as f:
+    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-30", "channel_sections", "Concept_New_Era_contentDetails_channel_sections.json"), "r") as f:
         data = json.load(f)
         for item in data["items"]:
             try:
@@ -47,7 +47,7 @@ def clean_channel_sections():
             except KeyError:
                 content_details_clean_data.append([item["id"], "None"])
     
-    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-08-26", "channel_sections", "Concept_New_Era_snippet_channel_sections.json"), "r") as f:
+    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-30", "channel_sections", "Concept_New_Era_snippet_channel_sections.json"), "r") as f:
         data = json.load(f)
         for item in data["items"]:
             if item["snippet"]["type"] == "channelsectiontypeundefined":
@@ -68,20 +68,20 @@ def clean_channels():
     statistics_clean_data = []
     topic_details_clean_data = []
 
-    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-08-26", "channels", "Concept_New_Era_brandingSettings_channels.json"), "r") as f:
+    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-30", "channels", "Concept_New_Era_brandingSettings_channels.json"), "r") as f:
         data = json.load(f)["items"][0]
         branding_settings_clean_data.append([data["id"], data["brandingSettings"]["channel"]["title"], data["brandingSettings"]["channel"]["description"], data["brandingSettings"]["image"]["bannerExternalUrl"]])
 
-    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-08-26", "channels", "Concept_New_Era_snippet_channels.json"), "r") as f:
+    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-30", "channels", "Concept_New_Era_snippet_channels.json"), "r") as f:
        data = json.load(f)["items"][0]
        snippet_clean_data.append([data["id"], data["snippet"]["title"], data["snippet"]["description"], data["snippet"]["customUrl"], data["snippet"]["publishedAt"], data["snippet"]["thumbnails"]["default"], data["snippet"]["country"]])
 
-    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-08-26", "channels", "Concept_New_Era_statistics_channels.json"), "r") as f:
+    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-30", "channels", "Concept_New_Era_statistics_channels.json"), "r") as f:
         data = json.load(f)["items"][0]
         statistics_clean_data.append([data["id"], data["statistics"]["viewCount"], data["statistics"]["subscriberCount"], data["statistics"]["videoCount"]])
 
     topic_ids = {"/m/04rlf": "Music", "/m/05fw6t": "Children's music", "/m/02mscn": "Christian music", "/m/0ggq0m": "Classical music", "/m/01lyv": "Country", "/m/02lkt": "Electronic music", "/m/0glt670": "Hip hop music", "/m/05rwpb": "Independent music", "/m/03_d0": "Jazz", "/m/028sqc": "Music of Asia", "/m/0g293": "Music of Latin America", "/m/064t9": "Pop music", "/m/06cqb": "Reggae", "/m/06j6l": "Rhythm and blues", "/m/06by7": "Rock music", "/m/0gywn": "Soul music", "/m/0bzvm2": "Gaming", "/m/025zzc": "Action game", "/m/02ntfj": "Action-adventure game", "/m/0b1vjn": "Casual game", "/m/02hygl": "Music video game", "/m/04q1x3q": "Puzzle video game", "/m/01sjng": "Racing video game", "/m/0403l3g": "Role-playing video game", "/m/021bp2": "Simulation video game", "/m/022dc6": "Sports game", "/m/03hf_rm": "Strategy video game", "/m/06ntj": "Sports", "/m/0jm_": "American football", "/m/018jz": "Baseball", "/m/018w8": "Basketball", "/m/01cgz": "Boxing", "/m/09xp_": "Cricket", "/m/02vx4": "Football", "/m/037hz": "Golf", "/m/03tmr": "Ice hockey", "/m/01h7lh": "Mixed martial arts", "/m/0410tth": "Motorsport", "/m/066wd": "Professional wrestling", "/m/07bs0": "Tennis", "/m/07_53": "Volleyball", "/m/02jjt": "Entertainment", "/m/095bb": "Animated cartoon", "/m/09kqc": "Humor", "/m/02vxn": "Movies", "/m/05qjc": "Performing arts", "/m/019_rr": "Lifestyle", "/m/032tl": "Fashion", "/m/027x7n": "Fitness", "/m/02wbm": "Food", "/m/0kt51": "Health", "/m/03glg": "Hobby", "/m/068hy": "Pets", "/m/041xxh": "Beauty", "/m/07c1v": "Technology", "/m/07bxq": "Tourism", "/m/07yv9": "Vehicles", "/m/01k8wb": "Knowledge", "/m/098wr": "Society"}
-    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-08-26", "channels", "Concept_New_Era_topicDetails_channels.json"), "r") as f:
+    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-30", "channels", "Concept_New_Era_topicDetails_channels.json"), "r") as f:
         data = json.load(f)["items"][0]
         if len(data["topicDetails"]["topicIds"]) == 0:
             topic_details_clean_data.append([data["id"], "None"])
@@ -102,7 +102,7 @@ def clean_channels():
 
 def clean_comments():
     
-    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-03", "comments", "Concept_New_Era_xzn1JjU-0G0_comments.json"), "r") as f:
+    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-30", "comments", "Concept_New_Era_xzn1JjU-0G0_comments.json"), "r") as f:
         data = json.load(f)
         if len(data["all_comments"]) == 0:
             clean_comments_df = pd.DataFrame({"Video_Id": data["videoId"], "Main_Comment": "Null", "Replies": "Null"})
@@ -149,7 +149,7 @@ def clean_comments():
 def clean_playlist_items():
     clean_snippet_data = []
 
-    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-03", "playlist_items", "Concept_New_Era_snippet_PL4OICRNRxUANcuKsOc3P6RbbZ6nVnhrgS_playlist_items.json"), "r") as f:
+    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-30", "playlist_items", "Concept_New_Era_snippet_PL4OICRNRxUANcuKsOc3P6RbbZ6nVnhrgS_playlist_items.json"), "r") as f:
         data = json.load(f)
         for item in data["items"]:
             clean_snippet_data.append([item["snippet"]["channelId"], item["snippet"]["channelTitle"], item["snippet"]["playlistId"], item["snippet"]["position"], item["snippet"]["resourceId"]["videoId"], item["snippet"]["publishedAt"], item["snippet"]["title"], item["snippet"]["description"], item["snippet"]["thumbnails"]["default"]["url"]])
@@ -164,18 +164,18 @@ def clean_playlists():
     clean_player_data = []
     clean_snippet_data = []
 
-    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-03", "playlists", "Concept_New_Era_contentDetails_playlists.json"), "r") as f:
+    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-30", "playlists", "Concept_New_Era_contentDetails_playlists.json"), "r") as f:
         data = json.load(f)
         for item in data["items"]:
             clean_content_details_data.append([item["id"], item["contentDetails"]["itemCount"]])
 
-    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-03", "playlists", "Concept_New_Era_player_playlists.json"), "r") as f:
+    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-30", "playlists", "Concept_New_Era_player_playlists.json"), "r") as f:
         data = json.load(f)
         for item in data["items"]:
             url = item["player"]["embedHtml"].split()[3][5:-1]
             clean_player_data.append([item["id"], item["player"]["embedHtml"], url])
     
-    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-03", "playlists", "Concept_New_Era_snippet_playlists.json"), "r") as f:
+    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-30", "playlists", "Concept_New_Era_snippet_playlists.json"), "r") as f:
         data = json.load(f)
         for item in data["items"]:
             clean_snippet_data.append([item["id"], item["snippet"]["channelId"], item["snippet"]["channelTitle"], item["snippet"]["publishedAt"], item["snippet"]["title"], item["snippet"]["description"], item["snippet"]["thumbnails"]["default"]["url"]])
@@ -193,7 +193,7 @@ def clean_playlists():
 def clean_search():
     clean_search_data = []
 
-    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-03", "search", "Concept_New_Era_xzn1JjU-0G0_related_videos.json"), "r") as f:
+    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-30", "search", "Concept_New_Era_xzn1JjU-0G0_related_videos.json"), "r") as f:
         data = json.load(f)
         for item in data["items"]:
             clean_search_data.append([item["id"]["videoId"], item["snippet"]["publishedAt"], item["snippet"]["channelId"], item["snippet"]["channelTitle"], item["snippet"]["title"], item["snippet"]["description"]])
@@ -208,12 +208,12 @@ def clean_videos():
     clean_snippet_data = []
     clean_statistics_data = []
 
-    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-03", "videos", "Concept_New_Era_contentDetails_xzn1JjU-0G0_video.json"), "r") as f:
+    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-30", "videos", "Concept_New_Era_contentDetails_xzn1JjU-0G0_video.json"), "r") as f:
         data = json.load(f)
         clean_content_details_data.append([data["items"][0]["id"], data["items"][0]["contentDetails"]["duration"]])
         clean_content_details_df = pd.DataFrame(data=clean_content_details_data, columns=["Video_Id", "Video_Duration"])
    
-    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-03", "videos", "Concept_New_Era_snippet_xzn1JjU-0G0_video.json"), "r") as f:
+    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-30", "videos", "Concept_New_Era_snippet_xzn1JjU-0G0_video.json"), "r") as f:
         data = json.load(f)
         clean_snippet_data = [data["items"][0]["id"], data["items"][0]["snippet"]["publishedAt"], data["items"][0]["snippet"]["channelId"], data["items"][0]["snippet"]["channelTitle"], data["items"][0]["snippet"]["title"], data["items"][0]["snippet"]["description"], data["items"][0]["snippet"]["thumbnails"]["default"]["url"]]
         clean_snippet_df = pd.DataFrame(columns=["Video_Id", "Video_Published_At", "Channel_Id", "Channel_Name", "Video_Title", "Video_Description", "Thumbnails_Default_Url"])
@@ -222,7 +222,7 @@ def clean_videos():
             clean_snippet_df[f"tag_{i+1}"] = "Null"
         clean_snippet_df.loc[len(clean_snippet_df)] = clean_snippet_data
     
-    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-03", "videos", "Concept_New_Era_statistics_xzn1JjU-0G0_video.json"), "r") as f:
+    with open(os.path.join(os.getcwd(), "Concept_New_Era_data", "2021-09-30", "videos", "Concept_New_Era_statistics_xzn1JjU-0G0_video.json"), "r") as f:
         data = json.load(f)
         clean_statistics_data.append([data["items"][0]["id"], data["items"][0]["statistics"]["viewCount"], data["items"][0]["statistics"]["likeCount"], data["items"][0]["statistics"]["dislikeCount"], data["items"][0]["statistics"]["favoriteCount"], data["items"][0]["statistics"]["commentCount"]])
         clean_statistics_df = pd.DataFrame(data=clean_statistics_data, columns=["Video_Id", "View_Count", "Like_Count", "Dislike_Count", "Favorite_Count", "Comment_Count"])
