@@ -1,7 +1,6 @@
 import os
 import json
 import requests
-from datetime import date
 
 class Comments():
 
@@ -24,5 +23,5 @@ class Comments():
         return json.loads(requests.get(url).text)
 
     def write_part_comment(self, comment_dictionary):
-        with open(os.path.join(os.getcwd(), f"{self.channel_name}_data", f"{date.today()}", "comments", f"{self.channel_name}_{self.vid_id}_comments.json"), "w") as f:
+        with open(os.path.join(os.getcwd(), f"{self.channel_name}_data", f"{self.date}", "raw", "comments", f"{self.vid_id}_comments.json"), "w") as f:
             json.dump(comment_dictionary, f, indent = 4)

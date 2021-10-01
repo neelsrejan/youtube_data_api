@@ -3,10 +3,11 @@ from ytd_comments import Comments
 
 class YT_COMMENTS(Comment_Threads, Comments):
 
-    def __init__(self, API_KEY, vid_id, channel_name):
+    def __init__(self, API_KEY, vid_id, channel_name, date):
         self.API_KEY = API_KEY
         self.vid_id = vid_id
         self.channel_name = channel_name
+        self.date = date
         self.COMMENT_API_COST = 0
         super()
         self.comment_ids = None

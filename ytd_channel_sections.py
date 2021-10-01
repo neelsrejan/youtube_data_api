@@ -1,7 +1,6 @@
 import os 
 import json
 import requests
-from datetime import date
 
 class Channel_Sections:
 
@@ -18,6 +17,6 @@ class Channel_Sections:
         return
 
     def write_part_channel_sections(self, response, part):
-        with open(os.path.join(os.getcwd(), f"{self.channel_name}_data", f"{date.today()}", "channel_sections", f"{self.channel_name}_{part}_channel_sections.json"), "w") as f:
+        with open(os.path.join(os.getcwd(), f"{self.channel_name}_data", f"{self.date}", "raw", "channel_sections", f"{part}_channel_sections.json"), "w") as f:
             json.dump(response, f, indent = 4)
 

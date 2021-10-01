@@ -9,13 +9,13 @@ from ytd_playlists import Playlists
 from ytd_playlist_items import Playlist_Items
 from ytd_search import Search
 from ytd_video import Video
-#from clean_data import Clean_Data
 
 class YT_CHANNEL(Activities, Channels, Channel_Sections, YT_COMMENTS, Playlists, Playlist_Items, Search, Video):
 
-    def __init__(self, API_KEY, channel_id):
+    def __init__(self, API_KEY, channel_id, date):
         self.API_KEY = API_KEY
         self.channel_id = channel_id
+        self.date = date
         self.API_COST = 0
         super()
         self.channel_name = None
@@ -23,8 +23,8 @@ class YT_CHANNEL(Activities, Channels, Channel_Sections, YT_COMMENTS, Playlists,
         self.vid_ids = [] 
         self.playlist_ids = []
 
-    def make_comment(self, API_KEY, vid_id, channel_name):
-        return YT_COMMENTS(API_KEY, vid_id, channel_name)
+    def make_comment(self, API_KEY, vid_id, channel_name, date):
+        return YT_COMMENTS(API_KEY, vid_id, channel_name, date)
 
     def get_channel_metadata(self):
         self.get_num_vids()

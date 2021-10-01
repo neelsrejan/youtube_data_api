@@ -1,7 +1,6 @@
 import os
 import json
 import requests
-from datetime import date
 
 class Playlists():
 
@@ -29,6 +28,6 @@ class Playlists():
         self.write_part_playlists(part, to_write)
 
     def write_part_playlists(self, part, to_write):
-        with open(os.path.join(os.getcwd(), f"{self.channel_name}_data", f"{date.today()}", "playlists", f"{self.channel_name}_{part}_playlists.json"), "w") as f:
+        with open(os.path.join(os.getcwd(), f"{self.channel_name}_data", f"{self.date}", "raw", "playlists", f"{part}_playlists.json"), "w") as f:
             json.dump(to_write, f, indent = 4)
 
