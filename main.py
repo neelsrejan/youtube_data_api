@@ -1,7 +1,8 @@
 import os
 import time
+import shutil
 from math import ceil
-from datetime import date
+from datetime import date, timedelta
 from YT_CHANNEL import YT_CHANNEL
 from clean_data import clean_data
 
@@ -13,6 +14,7 @@ def main():
     channel_id = input("What is the ID of the YouTube channel you with to get information about? ")
 
     # Get channel metadata of channel name, number of videos, video ids, and playlist ids
+    print("Getting metadata")
     YT = YT_CHANNEL(API_KEY, channel_id, str(date.today()))
     if YT.API_COST + 6 < 10000:
         YT.get_channel_metadata()
@@ -25,7 +27,25 @@ def main():
             os.makedirs(os.path.join(os.getcwd(), f"{YT.channel_name}_data", f"{YT.date}", "clean", "csv", f"{data_category}"))
             os.makedirs(os.path.join(os.getcwd(), f"{YT.channel_name}_data", f"{YT.date}", "clean", "xlsx", f"{data_category}"))
 
+    #Check to see if there is month old data as YT_data_api requires all data from a month or older be deleted
+    if os.path.exists(os.path.join(os.getcwd(), f"{YT.channel_name}_data")):
+        today = date.today()
+        month_ago = today - timedelta(days=30)
+
+        to_rem = []
+        directories = os.listdir(os.path.join(os.getcwd(), f"{YT.channel_name}_data"))
+        for directory in directories:
+            year, month, day = [int(i) for i in directory.split("-")]
+            date_dir = date(year, month, day)
+            if month_ago > date_dir:
+                to_rem.append(directory)
+
+        if len(to_rem) > 0:
+            for too_old in to_rem:
+                shutil.rmtree(os.path.join(os.getcwd(), f"{YT.channel_name}_data", too_old))
+
     # Get all data
+    print("Getting data")
     if YT.API_COST + 16 < 10000:
         YT.get_activity()
         YT.get_channels()
@@ -60,6 +80,7 @@ def main():
             not_done = False
          
     # Clean data into excel/csv
+    print("Cleaning data")
     clean_data(YT.channel_name, YT.vid_ids, YT.playlist_ids, YT.date)
     print("Complete, your data has been gathered and cleaned!")
     print("The current API Credits used today is: ", YT.API_COST)
