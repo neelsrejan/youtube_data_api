@@ -43,7 +43,7 @@ def main():
         if len(to_rem) > 0:
             for too_old in to_rem:
                 shutil.rmtree(os.path.join(os.getcwd(), f"{YT.channel_name}_data", too_old))
-
+    
     # Get all data
     print("Getting data")
     if YT.API_COST + 16 < 10000:
@@ -78,7 +78,7 @@ def main():
                 break
         if len(vid_ids) == 0:
             not_done = False
-         
+      
     # Clean data into excel/csv
     print("Cleaning data")
     clean_data(YT.channel_name, YT.vid_ids, YT.playlist_ids, YT.date)

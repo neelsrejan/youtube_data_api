@@ -107,9 +107,8 @@ def clean_comments(channel_name, vid_ids, date):
             data = json.load(f)
             if len(data["all_comments"]) == 0:
                 clean_comments_df = pd.DataFrame({"Video_Id": data["videoId"], "Main_Comment": "Null", "Replies": "Null"})
-            
-                clean_comments_df.to_csv(f"clean_comments.csv", index=False, na_rep="Null")
-                clean_comments_df.to_excel("clean_comments.xlsx", index=False, na_rep="Null")                                    
+                clean_comments_df.to_csv(os.path.join(os.getcwd(), f"{channel_name}_data", date, "clean", "csv", "comments", f"{vid_id}_comments.csv"), index=False, na_rep="Null")
+                clean_comments_df.to_excel(os.path.join(os.getcwd(), f"{channel_name}_data", date, "clean", "xlsx", "comments", f"{vid_id}_comments.xlsx"), index=False, na_rep="Null")
             else:
                 max_replies = 0
                 for comment_thread in data["all_comments"]:
