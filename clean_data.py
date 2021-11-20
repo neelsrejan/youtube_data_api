@@ -102,11 +102,14 @@ def clean_channels(channel_name, date):
     channels_df.to_excel(os.path.join(os.getcwd(), f"{channel_name}_data", date, "clean", "xlsx", "channels", "channels.xlsx"), index=False)
 
 def clean_comments(channel_name, vid_ids, date):
+    unordered_df_sizes = []
     for vid_id in vid_ids:
         with open(os.path.join(os.getcwd(), f"{channel_name}_data", date, "raw", "comments", f"{vid_id}_comments.json"), "r") as f:
             data = json.load(f)
             if len(data["all_comments"]) == 0:
                 clean_comments_df = pd.DataFrame({"Video_Id": data["videoId"], "Main_Comment": "Null", "Replies": "Null"})
+                list_to_order.append((-len(clean_comments_df.columns), clean_comments_df))
+                pq.put((-len(clean_comments_df.columns), clean_comments_df))
                 clean_comments_df.to_csv(os.path.join(os.getcwd(), f"{channel_name}_data", date, "clean", "csv", "comments", f"{vid_id}_comments.csv"), index=False, na_rep="Null")
                 clean_comments_df.to_excel(os.path.join(os.getcwd(), f"{channel_name}_data", date, "clean", "xlsx", "comments", f"{vid_id}_comments.xlsx"), index=False, na_rep="Null")
             else:
@@ -143,10 +146,20 @@ def clean_comments(channel_name, vid_ids, date):
                             to_append.append("Null")
                     clean_comments_df.loc[len(clean_comments_df)] = to_append
 
-                clean_comments_df.to_csv(os.path.join(os.getcwd(), f"{channel_name}_data", date, "clean", "csv", "comments", f"{vid_id}_comments.csv"), index=False, na_rep="Null")
-                clean_comments_df.to_excel(os.path.join(os.getcwd(), f"{channel_name}_data", date, "clean", "xlsx", "comments", f"{vid_id}_comments.xlsx"), index=False, na_rep="Null")
+                unordered_df_sizes.append((-len(clean_comments_df.columns), clean_comments_df))
+    
+    ordered_df_sizes = sorted(unordered_df_sizes, key=lambda x:x[0])
+    
+    super_df = ordered_df_sizes[0][1]
+    del ordered_df_sizes[0]
+    for curr_df in ordered_df_sizes:
+        super_df = super_df.append(curr_df[1], ignore_index=True)
+
+    super_df.to_csv(os.path.join(os.getcwd(), f"{channel_name}_data", date, "clean", "csv", "comments", "comments.csv"), index=False, na_rep="Null")
+    super_df.to_excel(os.path.join(os.getcwd(), f"{channel_name}_data", date, "clean", "xlsx", "comments", "comments.xlsx"), index=False, na_rep="Null")
 
 def clean_playlist_items(channel_name, playlist_ids, date):
+    all_playlist_items = []
     for playlist_id in playlist_ids:
         clean_snippet_data = []
         with open(os.path.join(os.getcwd(), f"{channel_name}_data", date, "raw", "playlist_items", f"{playlist_id}_snippet_playlist_items.json"), "r") as f:
@@ -155,9 +168,15 @@ def clean_playlist_items(channel_name, playlist_ids, date):
                 clean_snippet_data.append([item["snippet"]["channelId"], item["snippet"]["channelTitle"], item["snippet"]["playlistId"], item["snippet"]["position"], item["snippet"]["resourceId"]["videoId"], item["snippet"]["publishedAt"], item["snippet"]["title"], item["snippet"]["description"], item["snippet"]["thumbnails"]["default"]["url"]])
 
         clean_snippet_df = pd.DataFrame(data=clean_snippet_data, columns=["Channel_Id", "Channel_Name", "Playlist_Id", "Playlist_position", "Video_Id", "Video_Published_At", "Video_Title", "Video_Description", "Default_Thumbnail_Url"])
+        all_playlist_items.append(clean_snippet_df)
 
-        clean_snippet_df.to_csv(os.path.join(os.getcwd(), f"{channel_name}_data", date, "clean", "csv", "playlist_items", f"{playlist_id}_playlist_items.csv"), index=False)
-        clean_snippet_df.to_excel(os.path.join(os.getcwd(), f"{channel_name}_data", date, "clean", "xlsx", "playlist_items", f"{playlist_id}_playlist_items.xlsx"), index=False)
+    super_df = all_playlist_items[0]
+    del all_playlist_items[0]
+    for curr_df in all_playlist_items:
+        super_df = super_df.append(curr_df)
+
+    super_df.to_csv(os.path.join(os.getcwd(), f"{channel_name}_data", date, "clean", "csv", "playlist_items", f"playlist_items.csv"), index=False)
+    super_df.to_excel(os.path.join(os.getcwd(), f"{channel_name}_data", date, "clean", "xlsx", "playlist_items", f"playlist_items.xlsx"), index=False)
 
 def clean_playlists(channel_name, date):
     clean_content_details_data = []
@@ -191,6 +210,7 @@ def clean_playlists(channel_name, date):
     playlists_df.to_excel(os.path.join(os.getcwd(), f"{channel_name}_data", date, "clean", "xlsx", "playlists", "playlists.xlsx"), index=False)
 
 def clean_search(channel_name, vid_ids, date):
+    all_search = []
     for vid_id in vid_ids:
         clean_search_data = []
         with open(os.path.join(os.getcwd(), f"{channel_name}_data", date, "raw", "search", f"{vid_id}_search.json"), "r") as f:
@@ -198,12 +218,19 @@ def clean_search(channel_name, vid_ids, date):
             for item in data["items"]:
                 clean_search_data.append([item["id"]["videoId"], item["snippet"]["publishedAt"], item["snippet"]["channelId"], item["snippet"]["channelTitle"], item["snippet"]["title"], item["snippet"]["description"]])
 
-        clean_search_df = pd.DataFrame(data=clean_search_data, columns=["Video_Id", "Video_Published_At", "Channel_Id", "Channel_Name", "Video_Title", "Video_Description"])
+            clean_search_df = pd.DataFrame(data=clean_search_data, columns=["Video_Id", "Video_Published_At", "Channel_Id", "Channel_Name", "Video_Title", "Video_Description"])
+            all_search.append(clean_search_df)
 
-        clean_search_df.to_csv(os.path.join(os.getcwd(), f"{channel_name}_data", date, "clean", "csv", "search", f"{vid_id}_search.csv"), index=False)
-        clean_search_df.to_excel(os.path.join(os.getcwd(), f"{channel_name}_data", date, "clean", "xlsx", "search", f"{vid_id}_search.xlsx"), index=False)
+    super_df = all_search[0]
+    del all_search[0]
+    for curr_df in all_search:
+        super_df = super_df.append(curr_df)
+
+    super_df.to_csv(os.path.join(os.getcwd(), f"{channel_name}_data", date, "clean", "csv", "search", f"search.csv"), index=False)
+    super_df.to_excel(os.path.join(os.getcwd(), f"{channel_name}_data", date, "clean", "xlsx", "search", f"search.xlsx"), index=False)
 
 def clean_videos(channel_name, vid_ids, date):
+    unordered_df_size = []
     for vid_id in vid_ids:
         clean_content_details_data = []
         clean_snippet_data = []
@@ -218,9 +245,12 @@ def clean_videos(channel_name, vid_ids, date):
             data = json.load(f)
             clean_snippet_data = [data["items"][0]["id"], data["items"][0]["snippet"]["publishedAt"], data["items"][0]["snippet"]["channelId"], data["items"][0]["snippet"]["channelTitle"], data["items"][0]["snippet"]["title"], data["items"][0]["snippet"]["description"], data["items"][0]["snippet"]["thumbnails"]["default"]["url"]]
             clean_snippet_df = pd.DataFrame(columns=["Video_Id", "Video_Published_At", "Channel_Id", "Channel_Name", "Video_Title", "Video_Description", "Thumbnails_Default_Url"])
-            for i in range(len(data["items"][0]["snippet"]["tags"])):
-                clean_snippet_data.append(data["items"][0]["snippet"]["tags"][i])
-                clean_snippet_df[f"tag_{i+1}"] = "Null"
+            try:
+                for i in range(len(data["items"][0]["snippet"]["tags"])):
+                    clean_snippet_data.append(data["items"][0]["snippet"]["tags"][i])
+                    clean_snippet_df[f"tag_{i+1}"] = "Null"
+            except KeyError:
+                pass
             clean_snippet_df.loc[len(clean_snippet_df)] = clean_snippet_data
     
         with open(os.path.join(os.getcwd(), f"{channel_name}_data", date, "raw", "videos", f"{vid_id}_statistics_video.json"), "r") as f:
@@ -230,9 +260,17 @@ def clean_videos(channel_name, vid_ids, date):
     
         temp_df = clean_content_details_df.merge(clean_snippet_df, on=["Video_Id"], how="inner")
         video_df = temp_df.merge(clean_statistics_df, on=["Video_Id"], how="inner")
+        
+        unordered_df_size.append((-len(video_df.columns), video_df))
 
-        video_df.to_csv(os.path.join(os.getcwd(), f"{channel_name}_data", date, "clean", "csv", "videos", f"{vid_id}_video.csv"), index=False)
-        video_df.to_excel(os.path.join(os.getcwd(), f"{channel_name}_data", date, "clean", "xlsx", "videos", f"{vid_id}_video.xlsx"), index=False)
+    ordered_df_size = sorted(unordered_df_size, key=lambda x:x[0])
+    super_df = ordered_df_size[0][1]
+    del ordered_df_size[0]
+    for curr_df in ordered_df_size:
+        super_df = super_df.append(curr_df[1])
+
+    super_df.to_csv(os.path.join(os.getcwd(), f"{channel_name}_data", date, "clean", "csv", "videos", f"video.csv"), index=False, na_rep="Null")
+    super_df.to_excel(os.path.join(os.getcwd(), f"{channel_name}_data", date, "clean", "xlsx", "videos", f"video.xlsx"), index=False, na_rep="Null")
 
 if __name__ == "__main__":
     main()
