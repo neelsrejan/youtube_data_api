@@ -18,7 +18,7 @@ def main():
     YT = YT_CHANNEL(API_KEY, channel_id, str(date.today()))
     if YT.API_COST + 6 < 10000:
         YT.get_channel_metadata()
-    
+     
     # Create directories for saving data into when running functions
     if not os.path.exists(os.path.join(os.getcwd(), f"{YT.channel_name}_data", f"{YT.date}")):
         data_categories = ["activity", "channels", "channel_sections", "comments", "playlists", "playlist_items", "search", "videos"]
