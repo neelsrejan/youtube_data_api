@@ -1,7 +1,7 @@
 # Welcome to the Youtube Data API
 
 ## Check out the final report
-Tableau (dynamic, recommended): https://public.tableau.com/views/ConceptNewEraAnalytics/FullAnalyis?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link
+Tableau (dynamic, recommended): https://public.tableau.com/views/ConceptNewEraAnalytics/FullAnalyis?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link <br>
 PDF (not dynamic, not recommended) : Concept_New_Era_Analysis.pdf found above
 
 ## Abstract
