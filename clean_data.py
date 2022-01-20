@@ -1,11 +1,13 @@
 import os
 import json
+import time
 import pandas as pd
 
 def clean_data(channel_name, vid_ids, playlist_ids, date):
     clean_activity(channel_name, date)
     clean_channel_sections(channel_name, date)
     clean_channels(channel_name, date)
+    time.sleep(60)
     clean_comments(channel_name, vid_ids, date)
     clean_playlist_items(channel_name, playlist_ids, date)
     clean_playlists(channel_name, date)
@@ -45,7 +47,7 @@ def clean_channel_sections(channel_name, date):
             try:
                 content_details_clean_data.append([item["id"], item["contentDetails"]["playlists"][0]])
             except KeyError:
-                content_details_clean_data.append([item["id"], "None"])
+                content_details_clean_data.append([item["id"], "NULL"])
     
     with open(os.path.join(os.getcwd(), f"{channel_name}_data", date, "raw", "channel_sections", "snippet_channel_sections.json"), "r") as f:
         data = json.load(f)
@@ -85,7 +87,7 @@ def clean_channels(channel_name, date):
     with open(os.path.join(os.getcwd(), f"{channel_name}_data", date, "raw", "channels", "topicDetails_channels.json"), "r") as f:
         data = json.load(f)["items"][0]
         if len(data["topicDetails"]["topicIds"]) == 0:
-            topic_details_clean_data.append([data["id"], "None"])
+            topic_details_clean_data.append([data["id"], "NULL"])
         else:
             for category in data["topicDetails"]["topicIds"]:
                 topic_details_clean_data.append([data["id"], topic_ids[category]])
@@ -93,9 +95,9 @@ def clean_channels(channel_name, date):
     branding_settings_df = pd.DataFrame(data=branding_settings_clean_data, columns=["Channel_Id", "Channel_Name", "Channel_Description", "Channel_Banner_Url"])
     snippet_df = pd.DataFrame(data=snippet_clean_data, columns=["Channel_Id", "Channel_Name", "Channel_Description", "Custom_Url", "Channel_Start_Date", "Thumbnail_Url", "Country"])
     statistics_df = pd.DataFrame(data=statistics_clean_data, columns=["Channel_Id", "Channel_Total_Views", "Channel_Subscriber_Count", "Channel_Total_Videos"])
-    topic_details_df = pd.DataFrame(data=topic_details_clean_data, columns=["Channel_Id", "Channel Category"])
+    topic_details_df = pd.DataFrame(data=topic_details_clean_data, columns=["Channel_Id", "Channel_Category"])
 
-    temp_df = branding_settings_df.merge(snippet_df, on=["Channel_Id"], how="outer")
+    temp_df = branding_settings_df.merge(snippet_df, on=["Channel_Id", "Channel_Name", "Channel_Description"], how="outer")
     channels_df = temp_df.merge(topic_details_df, on=["Channel_Id"], how="outer")
 
     channels_df.to_csv(os.path.join(os.getcwd(), f"{channel_name}_data", date, "clean", "csv", "channels", "channels.csv"), index=False)
@@ -216,9 +218,9 @@ def clean_search(channel_name, vid_ids, date):
         with open(os.path.join(os.getcwd(), f"{channel_name}_data", date, "raw", "search", f"{vid_id}_search.json"), "r") as f:
             data = json.load(f)
             for item in data["items"]:
-                clean_search_data.append([item["id"]["videoId"], item["snippet"]["publishedAt"], item["snippet"]["channelId"], item["snippet"]["channelTitle"], item["snippet"]["title"], item["snippet"]["description"]])
+                clean_search_data.append([vid_id, item["id"]["videoId"], item["snippet"]["publishedAt"], item["snippet"]["channelId"], item["snippet"]["channelTitle"], item["snippet"]["title"], item["snippet"]["description"]])
 
-            clean_search_df = pd.DataFrame(data=clean_search_data, columns=["Video_Id", "Video_Published_At", "Channel_Id", "Channel_Name", "Video_Title", "Video_Description"])
+            clean_search_df = pd.DataFrame(data=clean_search_data, columns=["Video_Id", "Related_Video_Id", "Related_Video_Published_At", "Related_Channel_Id", "Related_Channel_Name", "Related_Video_Title", "Related_Video_Description"])
             all_search.append(clean_search_df)
 
     super_df = all_search[0]

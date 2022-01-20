@@ -78,7 +78,7 @@ def main():
                 break
         if len(vid_ids) == 0:
             not_done = False
-    
+      
     # Clean data into excel/csv
     print("Cleaning data")
     clean_data(YT.channel_name, YT.vid_ids, YT.playlist_ids, YT.date)
